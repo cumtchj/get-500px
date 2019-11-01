@@ -1,0 +1,159 @@
+<html>
+
+<head>
+    <title>get 500px</title>
+    <meta charset="utf-8">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        .bg-container,
+        .content-container {
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        
+        .content-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1
+        }
+        
+        .input-container {
+            height: 40px;
+            width: 50%;
+            background: none;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 50px;
+        }
+        
+        .input-container>input {
+            background: none;
+            border: none;
+            outline: none;
+            width: 95%;
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .input-container>input::placeholder {
+            color: #999;
+            font-size: 16px;
+        }
+        
+        .get-btn {
+            width: 120px;
+            height: 42px;
+            border: none;
+            background: none;
+            outline: none;
+            padding: 0;
+            margin: 0;
+            border-radius: 4px;
+            background-color: #09bb07;
+            color: #fff;
+            font-size: 16px;
+        }
+        
+        .cover {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, .7);
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            display: none;
+        }
+        
+        .img-container {
+            width: 80%;
+            height: 80%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .img-container>img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-container" id="bgContainer">
+        <img src="" alt="" class="bg-img">
+    </div>
+    <div class="content-container" id="conContainer">
+        <div class="input-container">
+            <input type="text" placeholder="输入图片详情页地址" id="origin">
+        </div>
+        <button class="get-btn" id="btn" onclick="getPic()">get pic</button>
+        <p id="get"></p>
+    </div>
+    <div class="cover" id="cover" onclick="hideCover()">
+        <div class="img-container">
+            <img src="" alt="" id="img">
+        </div>
+    </div>
+    <script src="./js/axios.min.js"></script>
+    <script>
+        let origin = null,
+            btn = null,
+            get = null,
+            img = null,
+            bgContainer = null,
+            conContainer = null,
+            getPic = function() {
+                let searchUrl = encodeURIComponent(origin.value),
+                    domain = 'http://localhost:7010',
+                    path = '/api/get-pic';
+                if (searchUrl) {
+                    axios.get(domain + path, {
+                            params: {
+                                searchUrl
+                            }
+                        })
+                        .then(data => {
+                            let imgUrl = data.data
+                            img.src = imgUrl;
+                            document.getElementById('cover').style.display = 'flex';
+                        })
+                }
+
+            },
+            hideCover = function() {
+                document.getElementById('cover').style.display = 'none';
+            };
+
+        origin = document.getElementById('origin'),
+            btn = document.getElementById('btn'),
+            get = document.getElementById('get'),
+            img = document.getElementById('img'),
+            bgContainer = document.getElementById('bgContainer'),
+            conContainer = document.getElementById('conContainer');
+
+        conContainer.style.height = window.innerHeight + 'px',
+            bgContainer.style.height = window.innerHeight + 'px';
+        window.onload = function() {
+            conContainer.style.height = window.innerHeight + 'px',
+                bgContainer.style.height = window.innerHeight + 'px';
+        }
+    </script>
+</body>
+
+</html>
